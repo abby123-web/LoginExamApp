@@ -141,6 +141,16 @@
             cursor: not-allowed;
         }
 
+        /* Hide browser's native password toggle */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear,
+        input[type="password"]::-webkit-contacts-auto-fill-button,
+        input[type="password"]::-webkit-credentials-auto-fill-button {
+            display: none !important;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
         .btn {
             display: block;
             width: 100%;
@@ -179,6 +189,30 @@
             border-radius: 2px;
             opacity: .6;
         }
+
+        .input-wrap {
+            position: relative;
+        }
+        .input-wrap input {
+            padding-right: 44px;
+        }
+        .eye-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            margin: 0;
+            width: auto;
+            display: flex;
+            align-items: center;
+            color: var(--gray);
+        }
+        .eye-btn:hover { color: var(--navy); }
+        .eye-btn svg { width: 20px; height: 20px; display: block; }
 
         #message {
             margin-top: 14px;
@@ -247,7 +281,15 @@
             <input type="text" id="username" placeholder="Enter your username" autocomplete="username">
 
             <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+            <div class="input-wrap">
+                <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+                <button type="button" class="eye-btn" onclick="togglePassword()" id="eyeBtn" aria-label="Toggle password">
+                    <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                </button>
+            </div>
 
             <button class="btn" onclick="login()" id="loginBtn">Sign In</button>
 
@@ -335,6 +377,20 @@
 
         document.getElementById("welcomePage").classList.remove("active");
         document.getElementById("loginPage").classList.add("active");
+    }
+
+    function togglePassword() {
+        var pwd = document.getElementById("password");
+        var icon = document.getElementById("eyeIcon");
+        if (pwd.type === "password") {
+            pwd.type = "text";
+            // Eye with slash (hide)
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.956 9.956 0 012.293-3.95M6.696 6.697A9.944 9.944 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.97 9.97 0 01-4.038 5.127M15 12a3 3 0 11-4.243-4.243M3 3l18 18"/>';
+        } else {
+            pwd.type = "password";
+            // Eye open
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+        }
     }
 
     // Allow Enter key to submit
